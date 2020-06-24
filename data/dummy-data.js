@@ -45,7 +45,6 @@ export const MEALS = [
     true,
     true
   ),
-
   new Meal(
     'm2',
     ['c2'],
@@ -71,7 +70,6 @@ export const MEALS = [
     false,
     false
   ),
-
   new Meal(
     'm3',
     ['c3'],
