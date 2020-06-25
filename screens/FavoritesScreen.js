@@ -1,38 +1,40 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useSelector } from 'react-redux';
 
-import { CATEGORIES } from '../data/dummy-data';
+import HeaderButton from '../components/HeaderButton';
 import MealList from '../components/MealList';
 import DefaultText from '../components/DefaultText';
 
-const CategoryMealScreen = props => {
-  const catId = props.navigation.getParam('categoryId');
+const FavoritesScreen = props => {
+  const favMeals = useSelector(state => state.meals.favoriteMeals);
 
-  const availableMeals = useSelector(state => state.meals.filteredMeals);
-
-  const displayedMeals = availableMeals.filter(
-    meal => meal.categoryIds.indexOf(catId) >= 0
-  );
-
-  if (displayedMeals.length === 0) {
+  if (favMeals.length === 0 || !favMeals) {
     return (
       <View style={styles.content}>
-        <DefaultText>No meals found, maybe check your filters?</DefaultText>
+        <DefaultText>No favorite meals found. Start adding some!</DefaultText>
       </View>
     );
   }
 
-  return <MealList listData={displayedMeals} navigation={props.navigation} />;
+  return <MealList listData={favMeals} navigation={props.navigation} />;
 };
 
-CategoryMealScreen.navigationOptions = navigationData => {
-  const catId = navigationData.navigation.getParam('categoryId');
-
-  const selectedCategory = CATEGORIES.find(cat => cat.id === catId);
-
+FavoritesScreen.navigationOptions = navData => {
   return {
-    headerTitle: selectedCategory.title
+    headerTitle: 'Your Favorites',
+    headerLeft: (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title="Menu"
+          iconName="ios-menu"
+          onPress={() => {
+            navData.navigation.toggleDrawer();
+          }}
+        />
+      </HeaderButtons>
+    )
   };
 };
 
@@ -44,4 +46,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default CategoryMealScreen;
+export default FavoritesScreen;
